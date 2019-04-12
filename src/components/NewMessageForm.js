@@ -1,5 +1,13 @@
 import React from 'react';
-import { API_ROOT, HEADERS } from '../constants';
+import { API_ROOT, DEV_API_ROOT, HEADERS } from '../constants';
+
+let apiRoot;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    apiRoot = DEV_API_ROOT;
+} else {
+    apiRoot = API_ROOT;
+}
 
 class NewMessageForm extends React.Component {
   state = {
@@ -18,7 +26,7 @@ class NewMessageForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    fetch(`${API_ROOT}/messages`, {
+    fetch(`${apiRoot}/messages`, {
       method: 'POST',
       headers: HEADERS,
       body: JSON.stringify(this.state)

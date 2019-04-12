@@ -1,5 +1,14 @@
 import React from 'react';
-import { API_ROOT, HEADERS } from '../constants';
+import { API_ROOT, DEV_API_ROOT, HEADERS } from '../constants';
+import { Form, Input, Icon } from 'semantic-ui-react'
+
+let apiRoot;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    apiRoot = DEV_API_ROOT;
+} else {
+    apiRoot = API_ROOT;
+}
 
 class NewConversationForm extends React.Component {
   state = {
@@ -12,7 +21,7 @@ class NewConversationForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault()
-    fetch(`${API_ROOT}/conversations`, {
+    fetch(`${apiRoot}/conversations`, {
       method: 'POST',
       headers: HEADERS,
       body: JSON.stringify(this.state)
@@ -23,16 +32,7 @@ class NewConversationForm extends React.Component {
   render = () => {
     return (
       <div className="newConversationForm">
-        <form onSubmit={this.handleSubmit}>
-          <label>New Conversation:</label>
-          <br />
-          <input
-            type="text"
-            value={this.state.title}
-            onChange={this.handleChange}
-          />
-          <input type="submit" />
-        </form>
+        <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} placeholder='Nova sala' value={this.state.title} onChange={this.handleChange} />
       </div>
     );
   };
