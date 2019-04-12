@@ -31,9 +31,9 @@ class NewConversationForm extends React.Component {
 
   render = () => {
     return (
-      <div className="newConversationForm">
+      <Form>
         <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} placeholder='Nova sala' value={this.state.title} onChange={this.handleChange} />
-      </div>
+      </Form>
     );
   };
 }

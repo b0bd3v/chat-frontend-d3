@@ -4,7 +4,7 @@ import { API_ROOT, DEV_API_ROOT } from '../constants';
 import NewConversationForm from './NewConversationForm';
 import MessagesArea from './MessagesArea';
 import Cable from './Cable';
-import { Card, Feed } from 'semantic-ui-react';
+import { Card, Feed, Container } from 'semantic-ui-react';
 
 let apiRoot;
 
@@ -63,7 +63,9 @@ class ConversationsList extends React.Component {
                     handleReceivedMessage={this.handleReceivedMessage}
                 />
                 ) : null}
-                <ul>{mapConversations(conversations, this.handleClick)}</ul>
+                <Container style={{ height: 100 }}>
+                    <ul>{mapConversations(conversations, this.handleClick)}</ul>
+                </Container>
                 {activeConversation ? (
                 <MessagesArea
                     conversation={findActiveConversation(
