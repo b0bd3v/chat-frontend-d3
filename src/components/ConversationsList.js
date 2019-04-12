@@ -76,7 +76,7 @@ const findActiveConversation = (conversations, activeConversation) => {
   );
 };
 
-const mapConversations = (conversations, handleClick) => {0
+const mapConversations = (conversations, handleClick) => {
   return conversations.map(conversation => {
     return (
       <li key={conversation.id} onClick={() => handleClick(conversation.id)}>
