@@ -20,19 +20,29 @@ class NewConversationForm extends React.Component {
   };
 
   handleSubmit = e => {
-    e.preventDefault()
+    e.preventDefault();
+    this.submit();
+  };
+  
+  submit = () => {
     fetch(`${apiRoot}/conversations`, {
       method: 'POST',
       headers: HEADERS,
       body: JSON.stringify(this.state)
     });
     this.setState({ title: '' });
-  };
+  }
+
+  handleKeyPress = (event) => {
+    if(event.key == 'Enter'){
+      this.submit();
+    }
+  }
 
   render = () => {
     return (
       <Form>
-        <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} placeholder='Nova sala' value={this.state.title} onChange={this.handleChange} />
+        <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} placeholder='Nova sala' value={this.state.title} onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
       </Form>
     );
   };

@@ -1,10 +1,11 @@
 import React from 'react';
 import { ActionCableConsumer } from 'react-actioncable-provider';
-import { API_ROOT, DEV_API_ROOT } from '../constants';
-import NewConversationForm from './NewConversationForm';
-import MessagesArea from './MessagesArea';
-import Cable from './Cable';
-import { Card, Feed, Container } from 'semantic-ui-react';
+import { API_ROOT, DEV_API_ROOT } from '../../constants';
+import NewConversationForm from '../NewConversationForm';
+import MessagesArea from '../MessagesArea';
+import Cable from '../Cable';
+import './ConversationsList.sass';
+import { Card, Feed, Container, Button, Image, List} from 'semantic-ui-react';
 
 let apiRoot;
 
@@ -21,9 +22,12 @@ class ConversationsList extends React.Component {
   };
 
   componentDidMount = () => {
-    fetch(`${apiRoot}/conversations`)
-      .then(res => res.json())
-      .then(conversations => this.setState({ conversations }));
+    fetch(`${apiRoot}/conversations`).then(res => {
+      return res.json()
+    }).then(conversations => {
+      conversations.reverse();
+      this.setState({ conversations });
+    });
   };
 
   handleClick = id => {
@@ -63,8 +67,10 @@ class ConversationsList extends React.Component {
                     handleReceivedMessage={this.handleReceivedMessage}
                 />
                 ) : null}
-                <Container style={{ height: 100 }}>
-                    <ul>{mapConversations(conversations, this.handleClick)}</ul>
+                <Container style={{ height: '100%' }}>
+                    <List divided verticalAlign='middle'>
+                      {mapConversations(conversations, this.handleClick)}
+                    </List>
                 </Container>
                 {activeConversation ? (
                 <MessagesArea
@@ -82,6 +88,17 @@ class ConversationsList extends React.Component {
 
 export default ConversationsList;
 
+const randomAvatar = () => {
+  const avatarList = [
+    '/images/avatar/small/veronika.jpg',
+    '/images/avatar/small/rachel.png',
+    '/images/avatar/small/matthew.png',
+    '/images/avatar/small/lindsay.png',
+    '/images/avatar/small/jenny.jpg'
+  ];
+  return avatarList[Math.floor(Math.random() * avatarList.length)];
+}
+
 const findActiveConversation = (conversations, activeConversation) => {
   return conversations.find(
     conversation => conversation.id === activeConversation
@@ -89,12 +106,18 @@ const findActiveConversation = (conversations, activeConversation) => {
 };
 
 const mapConversations = (conversations, handleClick) => {
+  conversations.reverse();
   return conversations.map(conversation => {
     return (
-      <li key={conversation.id} onClick={() => handleClick(conversation.id)}>
-        {conversation.created_at}
-        {conversation.title}
-      </li>
+      <List.Item key={conversation.id} onClick={() => handleClick(conversation.id)}>
+        <List.Content floated='right'>
+          <Button size='mini'>Add</Button>
+        </List.Content>
+        <Image avatar src={randomAvatar()} />
+        <List.Content>
+          {/* conversation.created_at */}{conversation.title}
+        </List.Content>
+      </List.Item>  
     );
   });
 };
