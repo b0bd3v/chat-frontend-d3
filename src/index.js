@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { API_WS_ROOT } from './constants';
+import { ActionCableProvider } from 'react-actioncable-provider';
 
 ReactDOM.render(
     <ActionCableProvider url={API_WS_ROOT}>
