@@ -5,7 +5,7 @@ import NewConversationForm from '../NewConversationForm';
 import MessagesArea from '../MessagesArea';
 import Cable from '../Cable';
 import './ConversationsList.sass';
-import { Card, Feed, Container, Button, Image, List} from 'semantic-ui-react';
+import { Card, Icon, Container, Button, Image, List} from 'semantic-ui-react';
 
 let apiRoot;
 
@@ -16,16 +16,29 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 }
 
 class ConversationsList extends React.Component {
+  
   state = {
     conversations: [],
     activeConversation: null
   };
 
+  orderConversationByDate = (conversations) => {
+    if(Array.isArray(conversations)){
+      conversations.sort(function(a,b){
+        return new Date(b.created_at) - new Date(a.created_at);
+      });  
+    }    
+    return conversations;
+  }
+
   componentDidMount = () => {
+    
+    this.props.onRef(this)
+
     fetch(`${apiRoot}/conversations`).then(res => {
       return res.json()
     }).then(conversations => {
-      conversations.reverse();
+      conversations = this.orderConversationByDate(conversations);
       this.setState({ conversations });
     });
   };
@@ -35,10 +48,16 @@ class ConversationsList extends React.Component {
   };
 
   handleReceivedConversation = response => {
-    const { conversation } = response;
-    this.setState({
-      conversations: [...this.state.conversations, conversation]
-    });
+    const conversation = response.conversation;
+    if(response.action === 'delete'){
+      this.setState({
+        conversations: this.state.conversations.filter(conv => conv.id !== conversation.id)
+      });  
+    }else{
+      this.setState({
+        conversations: [...this.state.conversations, conversation]
+      });  
+    }
   };
 
   handleReceivedMessage = response => {
@@ -51,16 +70,20 @@ class ConversationsList extends React.Component {
     this.setState({ conversations });
   };
 
+  handleDelete = id => {
+    fetch(`${apiRoot}/conversations/${id}`, {
+      method: 'DELETE'
+    });
+  };
+
   render = () => {
     const { conversations, activeConversation } = this.state;
+    console.log('teste');
     return (
         <Card>
             <Card.Content>
                 <NewConversationForm />
-                <ActionCableConsumer
-                channel={{ channel: 'ConversationsChannel' }}
-                onReceived={this.handleReceivedConversation}
-                />
+                {this.props.conversationsChannelResponse}
                 {this.state.conversations.length ? (
                 <Cable
                     conversations={conversations}
@@ -69,7 +92,7 @@ class ConversationsList extends React.Component {
                 ) : null}
                 <Container style={{ height: '100%' }}>
                     <List divided verticalAlign='middle'>
-                      {mapConversations(conversations, this.handleClick)}
+                      {mapConversations(conversations, this.handleClick, this.handleDelete, this.orderConversationByDate)}
                     </List>
                 </Container>
                 {activeConversation ? (
@@ -88,7 +111,7 @@ class ConversationsList extends React.Component {
 
 export default ConversationsList;
 
-const randomAvatar = () => {
+const randomAvatar = (id) => {
   const avatarList = [
     '/images/avatar/small/veronika.jpg',
     '/images/avatar/small/rachel.png',
@@ -96,7 +119,16 @@ const randomAvatar = () => {
     '/images/avatar/small/lindsay.png',
     '/images/avatar/small/jenny.jpg'
   ];
-  return avatarList[Math.floor(Math.random() * avatarList.length)];
+
+  const strNumber = id.toString();
+  
+  let number = strNumber.substring(strNumber.length -1, strNumber.length)
+
+  while(number >= avatarList.length){
+    number = (number - avatarList.length)
+  }
+
+  return avatarList[number];
 }
 
 const findActiveConversation = (conversations, activeConversation) => {
@@ -105,61 +137,27 @@ const findActiveConversation = (conversations, activeConversation) => {
   );
 };
 
-const mapConversations = (conversations, handleClick) => {
-  conversations.reverse();
-  return conversations.map(conversation => {
+
+const mapConversations = (conversations, handleClick, handleDelete, orderConversationByDate) => {
+  conversations = orderConversationByDate(conversations);
+
+  return conversations.map((conversation, index) => {
+    if(conversation === undefined){
+      return ''
+    }
     return (
-      <List.Item key={conversation.id} onClick={() => handleClick(conversation.id)}>
+      <List.Item key={conversation.id}>
         <List.Content floated='right'>
-          <Button size='mini'>Add</Button>
+          <Button size='mini' onClick={ () => handleDelete(conversation.id) }>
+            <Icon name='close' inverted />
+          </Button>
         </List.Content>
-        <Image avatar src={randomAvatar()} />
-        <List.Content>
+        <Image avatar src={randomAvatar(conversation.id)} />
+        <List.Content onClick={() => handleClick(conversation.id)}>
           {/* conversation.created_at */}{conversation.title}
         </List.Content>
       </List.Item>  
     );
   });
 };
-
-const CardExampleContentBlock = () => (
-    <Card>
-      <Card.Content>
-        <Card.Header>Recent Activity</Card.Header>
-      </Card.Content>
-      <Card.Content>
-        <Feed>
-          <Feed.Event>
-            <Feed.Label image='/images/avatar/small/jenny.jpg' />
-            <Feed.Content>
-              <Feed.Date content='1 day ago' />
-              <Feed.Summary>
-                You added <a>Jenny Hess</a> to your <a>coworker</a> group.
-              </Feed.Summary>
-            </Feed.Content>
-          </Feed.Event>
-  
-          <Feed.Event>
-            <Feed.Label image='/images/avatar/small/molly.png' />
-            <Feed.Content>
-              <Feed.Date content='3 days ago' />
-              <Feed.Summary>
-                You added <a>Molly Malone</a> as a friend.
-              </Feed.Summary>
-            </Feed.Content>
-          </Feed.Event>
-  
-          <Feed.Event>
-            <Feed.Label image='/images/avatar/small/elliot.jpg' />
-            <Feed.Content>
-              <Feed.Date content='4 days ago' />
-              <Feed.Summary>
-                You added <a>Elliot Baker</a> to your <a>musicians</a> group.
-              </Feed.Summary>
-            </Feed.Content>
-          </Feed.Event>
-        </Feed>
-      </Card.Content>
-    </Card>
-    );
   

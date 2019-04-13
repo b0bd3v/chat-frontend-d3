@@ -34,7 +34,7 @@ class NewConversationForm extends React.Component {
   }
 
   handleKeyPress = (event) => {
-    if(event.key == 'Enter'){
+    if(event.key === 'Enter'){
       this.submit();
     }
   }
@@ -42,7 +42,9 @@ class NewConversationForm extends React.Component {
   render = () => {
     return (
       <Form>
-        <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} placeholder='Nova sala' value={this.state.title} onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
+        <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} 
+          placeholder='Nova sala' value={this.state.title} fluid style={{ marginBottom: 20 }}
+          onChange={this.handleChange} onKeyPress={this.handleKeyPress} />
       </Form>
     );
   };
