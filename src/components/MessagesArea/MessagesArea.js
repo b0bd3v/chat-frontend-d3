@@ -6,7 +6,7 @@ const MessagesArea = ({
   conversation: { id, title, messages },
 }) => {
   return (
-    <Card>
+    <Card fluid>
       <Card.Content>
         <h2>{title}</h2>
         <ul>{orderedMessages(messages)}</ul>

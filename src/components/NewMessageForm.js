@@ -1,5 +1,6 @@
 import React from 'react';
 import { API_ROOT, DEV_API_ROOT, HEADERS } from '../constants';
+import { Form } from 'semantic-ui-react';
 
 let apiRoot;
 
@@ -36,18 +37,11 @@ class NewMessageForm extends React.Component {
 
   render = () => {
     return (
-      <div className="newMessageForm">
-        <form onSubmit={this.handleSubmit}>
-          <label>New Message:</label>
-          <br />
-          <input
-            type="text"
-            value={this.state.text}
-            onChange={this.handleChange}
-          />
-          <input type="submit" />
-        </form>
-      </div>
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Field>
+          <input placeholder='Mensagem' value={this.state.text} onChange={this.handleChange}/>
+        </Form.Field>
+      </Form>      
     );
   };
 }
