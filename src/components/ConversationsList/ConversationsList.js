@@ -3,6 +3,7 @@ import { ActionCableConsumer } from 'react-actioncable-provider';
 import { API_ROOT, DEV_API_ROOT } from '../../constants';
 import NewConversationForm from '../NewConversationForm';
 import MessagesArea from '../MessagesArea';
+import PopUpConversation from './PopUpConversation/PopUpConversation';
 import Cable from '../Cable';
 import './ConversationsList.sass';
 import { Card, Icon, Container, Button, Image, List} from 'semantic-ui-react';
@@ -10,13 +11,13 @@ import { Card, Icon, Container, Button, Image, List} from 'semantic-ui-react';
 let apiRoot;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    apiRoot = DEV_API_ROOT;
+  apiRoot = DEV_API_ROOT;
 } else {
-    apiRoot = API_ROOT;
+  apiRoot = API_ROOT;
 }
 
 class ConversationsList extends React.Component {
-  
+
   state = {
     conversations: [],
     activeConversation: null
@@ -32,7 +33,7 @@ class ConversationsList extends React.Component {
   }
 
   componentDidMount = () => {
-    
+
     this.props.onRef(this)
 
     fetch(`${apiRoot}/conversations`).then(res => {
@@ -68,7 +69,7 @@ class ConversationsList extends React.Component {
     const conversations = [...this.state.conversations];
     const conversation = conversations.find(
       conversation => conversation.id === message.conversation_id
-    );
+      );
     conversation.messages = [...conversation.messages, message];
     this.setState({ conversations });
   };
@@ -83,24 +84,24 @@ class ConversationsList extends React.Component {
     const { conversations, activeConversation } = this.state;
     
     return (
-        <Card>
-            <Card.Content>
-                <NewConversationForm />
-                {this.props.conversationsChannelResponse}
-                {this.state.conversations.length ? (
-                <Cable
-                    conversations={conversations}
-                    handleReceivedMessage={this.handleReceivedMessage}
-                />
-                ) : null}
-                <Container style={{ height: '100%' }}>
-                    <List divided verticalAlign='middle'>
-                      {mapConversations(conversations, this.handleActiveConversation, this.handleDelete, this.orderConversationByDate)}
-                    </List>
-                </Container>
-            </Card.Content>
-        </Card>
-    );
+      <Card fluid>
+      <Card.Content>
+      <NewConversationForm />
+      {this.props.conversationsChannelResponse}
+      {this.state.conversations.length ? (
+        <Cable
+        conversations={conversations}
+        handleReceivedMessage={this.handleReceivedMessage}
+        />
+        ) : null}
+      <Container style={{ height: '100%' }}>
+      <List divided verticalAlign='middle'>
+      {mapConversations(conversations, this.handleActiveConversation, this.handleDelete, this.orderConversationByDate)}
+      </List>
+      </Container>
+      </Card.Content>
+      </Card>
+      );
   };
 }
 
@@ -108,13 +109,13 @@ export default ConversationsList;
 
 const randomAvatar = (id) => {
   const avatarList = [
-    '/images/rooms/doge.jpg',
-    '/images/rooms/cat.jpg',
-    '/images/avatar/small/veronika.jpg',
-    '/images/avatar/small/rachel.png',
-    '/images/avatar/small/matthew.png',
-    '/images/avatar/small/lindsay.png',
-    '/images/avatar/small/jenny.jpg'
+  '/images/rooms/doge.jpg',
+  '/images/rooms/cat.jpg',
+  '/images/avatar/small/veronika.jpg',
+  '/images/avatar/small/rachel.png',
+  '/images/avatar/small/matthew.png',
+  '/images/avatar/small/lindsay.png',
+  '/images/avatar/small/jenny.jpg'
   ];
 
   const strNumber = id.toString();
@@ -131,7 +132,7 @@ const randomAvatar = (id) => {
 const findActiveConversation = (conversations, activeConversation) => {
   return conversations.find(
     conversation => conversation.id === activeConversation
-  );
+    );
 };
 
 
@@ -143,16 +144,23 @@ const mapConversations = (conversations, handleActiveConversation, handleDelete,
       return ''
     }
     return (
-      <List.Item key={conversation.id}>
+      <PopUpConversation key={conversation.id}
+      trigger={
+        <List.Item key={conversation.id}>
         <List.Content floated='right'>
-          <Icon link name='close' style={{marginTop: 7}} onClick={ () => handleDelete(conversation.id) } />
+        <Icon link name='close' style={{marginTop: 7}} onClick={ () => handleDelete(conversation.id) } />
         </List.Content>
-        <Image avatar src={randomAvatar(conversation.id)} />
-        <List.Content onClick={() => handleActiveConversation(conversation.id)}>
-          {/* conversation.created_at */}{conversation.title}
+        <Image style={{cursor: 'pointer'}} avatar src={randomAvatar(conversation.id)} onClick={() => handleActiveConversation(conversation.id)}/>
+        
+        
+        <List.Content style={{cursor: 'pointer'}} onClick={() => handleActiveConversation(conversation.id)}>
+        {conversation.title}
         </List.Content>
-      </List.Item>  
-    );
+        
+        </List.Item>
+      }
+      conversation={conversation}
+      />
+      );
   });
 };
-  
