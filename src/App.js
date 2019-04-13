@@ -36,13 +36,13 @@ class App extends Component {
     return (
       <Grid>
         <Grid.Row columns={14}>
-          <Grid.Column style={{ margin: 20 }} width={4}>
+          <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={4}>
               <ActionCableConsumer channel={{ channel: 'ConversationsChannel' }} onReceived={this.handleReceivedConversation} />
               <ConversationsList onRef={ref => (this.conversationsList = ref)} handleActiveConversation={this.handleActiveConversation} 
                 handleConversations={this.handleConversations}/>
           </Grid.Column>
 
-          <Grid.Column style={{ margin: 20 }} width={10}>
+          <Grid.Column style={{ marginTop: 20 }} width={10}>
             {activeConversation ? (
               <MessagesArea
                   conversation={findActiveConversation(
