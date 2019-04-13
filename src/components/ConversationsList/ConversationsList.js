@@ -38,12 +38,15 @@ class ConversationsList extends React.Component {
     fetch(`${apiRoot}/conversations`).then(res => {
       return res.json()
     }).then(conversations => {
+      this.props.handleConversations(conversations);
       conversations = this.orderConversationByDate(conversations);
       this.setState({ conversations });
     });
+
   };
 
-  handleClick = id => {
+  handleActiveConversation = id => {
+    this.props.handleActiveConversation(id)
     this.setState({ activeConversation: id });
   };
 
@@ -78,7 +81,7 @@ class ConversationsList extends React.Component {
 
   render = () => {
     const { conversations, activeConversation } = this.state;
-    console.log('teste');
+    
     return (
         <Card>
             <Card.Content>
@@ -92,17 +95,9 @@ class ConversationsList extends React.Component {
                 ) : null}
                 <Container style={{ height: '100%' }}>
                     <List divided verticalAlign='middle'>
-                      {mapConversations(conversations, this.handleClick, this.handleDelete, this.orderConversationByDate)}
+                      {mapConversations(conversations, this.handleActiveConversation, this.handleDelete, this.orderConversationByDate)}
                     </List>
                 </Container>
-                {activeConversation ? (
-                <MessagesArea
-                    conversation={findActiveConversation(
-                    conversations,
-                    activeConversation
-                    )}
-                />
-                ) : null}
             </Card.Content>
         </Card>
     );
@@ -113,6 +108,8 @@ export default ConversationsList;
 
 const randomAvatar = (id) => {
   const avatarList = [
+    '/images/rooms/doge.jpg',
+    '/images/rooms/cat.jpg',
     '/images/avatar/small/veronika.jpg',
     '/images/avatar/small/rachel.png',
     '/images/avatar/small/matthew.png',
@@ -138,7 +135,7 @@ const findActiveConversation = (conversations, activeConversation) => {
 };
 
 
-const mapConversations = (conversations, handleClick, handleDelete, orderConversationByDate) => {
+const mapConversations = (conversations, handleActiveConversation, handleDelete, orderConversationByDate) => {
   conversations = orderConversationByDate(conversations);
 
   return conversations.map((conversation, index) => {
@@ -148,12 +145,10 @@ const mapConversations = (conversations, handleClick, handleDelete, orderConvers
     return (
       <List.Item key={conversation.id}>
         <List.Content floated='right'>
-          <Button size='mini' onClick={ () => handleDelete(conversation.id) }>
-            <Icon name='close' inverted />
-          </Button>
+          <Icon link name='close' style={{marginTop: 7}} onClick={ () => handleDelete(conversation.id) } />
         </List.Content>
         <Image avatar src={randomAvatar(conversation.id)} />
-        <List.Content onClick={() => handleClick(conversation.id)}>
+        <List.Content onClick={() => handleActiveConversation(conversation.id)}>
           {/* conversation.created_at */}{conversation.title}
         </List.Content>
       </List.Item>  
