@@ -46,7 +46,7 @@ class NewConversationForm extends React.Component {
   render = () => {
     return (
       <Input icon={<Icon name='plus' inverted circular link onClick={this.handleSubmit} />} 
-        placeholder='Nova sala' value={this.state.title} fluid style={{ marginBottom: 20 }}
+        placeholder='Nova Conversa' value={this.state.title} fluid style={{ marginBottom: 20 }}
         onChange={this.handleChange} onKeyPress={this.handleKeyPress} />    
     );
   };

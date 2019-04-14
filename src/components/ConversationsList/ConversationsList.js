@@ -55,11 +55,21 @@ class ConversationsList extends React.Component {
   };
 
   removeConversation = (conversation) => {
+    
     let conversations = this.state.conversations.filter(conv => conv.id !== conversation.id)
-    if(conversations === null){ conversations = []}    
+    if(conversations === null){ conversations = []}
     this.setState({
       conversations
     });
+    
+    if(this.state.activeConversation === conversation.id || !this.state.activeConversation){
+      if(this.state.conversations.length > 0){
+        this.handleActiveConversation(this.state.conversations[0].id);
+      } else {
+        this.handleActiveConversation(null);
+      }
+    }
+
   }
 
   handleDelete = id => {
@@ -67,14 +77,7 @@ class ConversationsList extends React.Component {
       method: 'DELETE'
     }).then((response) => {
       if(response.ok === true){
-        this.removeConversation({id});
-        if(this.state.activeConversation === id){
-          if(this.state.conversations.length > 0){
-            this.handleActiveConversation(this.state.conversations[0].id);
-          } else {
-            this.handleActiveConversation(null);
-          }
-        }
+        
       }
     });
   };
