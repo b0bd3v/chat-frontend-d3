@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import MessagesArea from './components/MessagesArea/MessagesArea';
 import ConversationsList from './components/ConversationsList/ConversationsList';
-import { Grid } from 'semantic-ui-react';
+import EmptyMessageArea from './components/MessagesArea/EmptyMessageArea';
+import { findItemByAttribute } from './helper/DataManipulation';
+import { Grid, Container } from 'semantic-ui-react';
 import { ActionCableConsumer } from 'react-actioncable-provider';
 
 class App extends Component {
+  
+  conversations = []
   
   state = {
     conversations: [],
@@ -13,6 +17,10 @@ class App extends Component {
 
   handleReceivedConversation = e => {
     this.conversationsList.handleReceivedConversation(e);
+    this.conversations = this.conversationsList.state.conversations;
+    if(findItemByAttribute( this.conversations, 'id', e.conversation.id)){
+      this.handleActiveConversation(e.conversation.id);
+    }
   };
 
   handleActiveConversation = id => {
@@ -20,52 +28,47 @@ class App extends Component {
   };
   
   handleConversations = e => {
-    this.setState({ conversations: e });
+    this.conversations = e;
   }
 
   handleReceivedMessage = response => {
     this.messagesArea.handleReceivedMessage(response)
   }
 
-  findActiveConversation = (conversations, activeConversation) => {
-    return conversations.find(
-      conversation => conversation.id === activeConversation
-    );
-  }
-  
-
   render() {
     
     const activeConversation = this.state.activeConversation;
     
     return (
-      <Grid style={{ height: '100%' }}>
-        <Grid.Row>
-          <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={3}>
-              
-              <ActionCableConsumer channel={{ channel: 'ConversationsChannel' }} onReceived={this.handleReceivedConversation} />
-              
-              <ConversationsList 
-                onRef={ref => (this.conversationsList = ref)} 
-                handleActiveConversation={this.handleActiveConversation} 
-                handleConversations={this.handleConversations} />
+      <Container style={{ height: '60%', marginTop: '3%' }}>
+        <Grid style={{ height: '100%' }}>
+          <Grid.Row>
+            <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={3}>
+                
+                <ActionCableConsumer channel={{ channel: 'ConversationsChannel' }} onReceived={this.handleReceivedConversation} />
+               
+                <ConversationsList 
+                  onRef={ref => (this.conversationsList = ref)} 
+                  handleActiveConversation={this.handleActiveConversation} 
+                  handleConversations={this.handleConversations} />
 
-          </Grid.Column>
+            </Grid.Column>
 
-          <Grid.Column style={{ marginTop: 20 }} width={12}>
-          {activeConversation ? (
-              <MessagesArea
-                  onRef={ref => (this.messagesArea = ref)} 
-                  conversation={this.findActiveConversation(
-                  this.state.conversations,
-                  activeConversation
-                  )}
-              />
-              ) : null}
+            <Grid.Column style={{ marginTop: 20 }} width={12}>
             
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+            {activeConversation ? (
+                <MessagesArea
+                    onRef={ref => (this.messagesArea = ref)} 
+                    conversation={findItemByAttribute( this.conversations, 'id', activeConversation)}
+                />
+                ) : (
+                  <EmptyMessageArea/>
+                )                
+            }
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
     );
   }
 }
