@@ -43,7 +43,7 @@ class ListMessages extends React.Component {
 
     return (
       <List>
-        <List.Item key="dummy" style={{height: 600}}></List.Item>
+        <List.Item key="dummy" style={{height: 400}}></List.Item>
         {this.orderedMessages(messages)}
       </List>
     );

@@ -38,8 +38,8 @@ class ConversationsList extends React.Component {
   }
 
   handleActiveConversation = id => {
-    this.props.handleActiveConversation(id)
     this.loadConversations()
+    this.props.handleActiveConversation(id)
     this.setState({ activeConversation: id });
   };
 
@@ -125,7 +125,7 @@ class ConversationsList extends React.Component {
       <Card fluid style={{ height: '100%'}}>
       <Card.Content style={{ overflow: 'auto' }}>
       <NewConversationForm />
-      <Container style={{ height: '100%' }}>
+      <Container>
       <List divided verticalAlign='middle'>
         {this.mapConversations(conversations, this.handleActiveConversation, this.handleDelete, this.orderConversationByDate)}
       </List>
