@@ -20,39 +20,50 @@ class App extends Component {
   };
   
   handleConversations = e => {
-    this.state.conversations = e
+    this.setState({ conversations: e });
   }
+
+  handleReceivedMessage = response => {
+    this.messagesArea.handleReceivedMessage(response)
+  }
+
+  findActiveConversation = (conversations, activeConversation) => {
+    return conversations.find(
+      conversation => conversation.id === activeConversation
+    );
+  }
+  
 
   render() {
     
-    const { conversations, activeConversation } = this.state;
+    const activeConversation = this.state.activeConversation;
     
-    const findActiveConversation = (conversations, activeConversation) => {
-      return conversations.find(
-        conversation => conversation.id === activeConversation
-      );
-    };
-
     return (
-      <Grid>
-        <Grid.Row columns={14}>
-          <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={4}>
+      <Grid style={{ height: '100%' }}>
+        <Grid.Row>
+          <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={3}>
+              
               <ActionCableConsumer channel={{ channel: 'ConversationsChannel' }} onReceived={this.handleReceivedConversation} />
-              <ConversationsList onRef={ref => (this.conversationsList = ref)} handleActiveConversation={this.handleActiveConversation} 
-                handleConversations={this.handleConversations}/>
+              
+              <ConversationsList 
+                onRef={ref => (this.conversationsList = ref)} 
+                handleActiveConversation={this.handleActiveConversation} 
+                handleConversations={this.handleConversations} />
+
           </Grid.Column>
 
-          <Grid.Column style={{ marginTop: 20 }} width={10}>
-            {activeConversation ? (
+          <Grid.Column style={{ marginTop: 20 }} width={12}>
+          {activeConversation ? (
               <MessagesArea
-                  conversation={findActiveConversation(
+                  onRef={ref => (this.messagesArea = ref)} 
+                  conversation={this.findActiveConversation(
                   this.state.conversations,
                   activeConversation
                   )}
               />
-              ) : null}          
+              ) : null}
+            
           </Grid.Column>
-          
         </Grid.Row>
       </Grid>
     );
