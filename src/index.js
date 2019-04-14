@@ -9,7 +9,7 @@ import { ActionCableProvider } from 'react-actioncable-provider';
 
 let apiWS
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
     apiWS = DEV_API_WS_ROOT
 } else {
     apiWS = API_WS_ROOT

@@ -8,7 +8,7 @@ import { Card, Icon, Container, Image, List} from 'semantic-ui-react';
 
 let apiRoot;
 
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   apiRoot = DEV_API_ROOT;
 } else {
   apiRoot = API_ROOT;
