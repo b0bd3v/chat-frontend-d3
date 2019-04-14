@@ -1,12 +1,8 @@
 import React from 'react';
-import { ActionCableConsumer } from 'react-actioncable-provider';
 import { API_ROOT, DEV_API_ROOT } from '../../constants';
 import NewConversationForm from '../NewConversationForm';
-import MessagesArea from '../MessagesArea';
 import PopUpConversation from './PopUpConversation/PopUpConversation';
-import Cable from '../Cable';
-import './ConversationsList.sass';
-import { Card, Icon, Container, Button, Image, List} from 'semantic-ui-react';
+import { Card, Icon, Container, Image, List} from 'semantic-ui-react';
 
 let apiRoot;
 
@@ -81,22 +77,15 @@ class ConversationsList extends React.Component {
   };
 
   render = () => {
-    const { conversations, activeConversation } = this.state;
+    const { conversations } = this.state;
     
     return (
-      <Card fluid>
-      <Card.Content>
+      <Card fluid style={{ height: '100%'}}>
+      <Card.Content style={{ overflow: 'auto' }}>
       <NewConversationForm />
-      {this.props.conversationsChannelResponse}
-      {this.state.conversations.length ? (
-        <Cable
-        conversations={conversations}
-        handleReceivedMessage={this.handleReceivedMessage}
-        />
-        ) : null}
       <Container style={{ height: '100%' }}>
       <List divided verticalAlign='middle'>
-      {mapConversations(conversations, this.handleActiveConversation, this.handleDelete, this.orderConversationByDate)}
+        {mapConversations(conversations, this.handleActiveConversation, this.handleDelete, this.orderConversationByDate)}
       </List>
       </Container>
       </Card.Content>
@@ -144,23 +133,25 @@ const mapConversations = (conversations, handleActiveConversation, handleDelete,
       return ''
     }
     return (
-      <PopUpConversation key={conversation.id}
-      trigger={
+      
         <List.Item key={conversation.id}>
-        <List.Content floated='right'>
-        <Icon link name='close' style={{marginTop: 7}} onClick={ () => handleDelete(conversation.id) } />
-        </List.Content>
-        <Image style={{cursor: 'pointer'}} avatar src={randomAvatar(conversation.id)} onClick={() => handleActiveConversation(conversation.id)}/>
+          <List.Content floated='right'>
+            <Icon link name='close' style={{marginTop: 7}} onClick={ () => handleDelete(conversation.id) } />
+          </List.Content>
         
-        
-        <List.Content style={{cursor: 'pointer'}} onClick={() => handleActiveConversation(conversation.id)}>
-        {conversation.title}
-        </List.Content>
-        
+          <PopUpConversation key={conversation.id}
+            trigger={
+              <Image style={{cursor: 'pointer'}} avatar src={randomAvatar(conversation.id)} onClick={() => handleActiveConversation(conversation.id)}/>
+            }
+            conversation={conversation}
+          />
+
+          <List.Content style={{cursor: 'pointer'}} onClick={() => handleActiveConversation(conversation.id)}>
+            {conversation.title}
+          </List.Content>
+
         </List.Item>
-      }
-      conversation={conversation}
-      />
+      
       );
   });
 };

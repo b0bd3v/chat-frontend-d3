@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Popup } from 'semantic-ui-react'
+import { Popup } from 'semantic-ui-react';
 
 class PopUpConversation extends React.Component {
 
