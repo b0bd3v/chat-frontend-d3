@@ -2,6 +2,13 @@ import React from 'react';
 import { API_ROOT, DEV_API_ROOT, HEADERS } from '../../constants/index';
 import { Input, Icon } from 'semantic-ui-react'
 
+let apiRoot;
+
+if (process.env.NODE_ENV === 'development') {
+    apiRoot = DEV_API_ROOT;
+} else {
+    apiRoot = API_ROOT;
+}
 
 class NewConversationForm extends React.Component {
   
@@ -21,7 +28,7 @@ class NewConversationForm extends React.Component {
   
   submit = () => {
     if(this.state.title.length > 0){
-      fetch(`${API_ROOT}/conversations`, {
+      fetch(`${apiRoot}/conversations`, {
         method: 'POST',
         headers: HEADERS,
         body: JSON.stringify(this.state)
