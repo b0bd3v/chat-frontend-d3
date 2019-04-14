@@ -43,7 +43,7 @@ class App extends Component {
       <Container style={{ height: '60%', marginTop: '3%' }}>
         <Grid style={{ height: '100%' }}>
           <Grid.Row>
-            <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={3}>
+            <Grid.Column style={{ marginTop: 20, marginLeft: 20 }} width={5}>
                 
                 <ActionCableConsumer channel={{ channel: 'ConversationsChannel' }} onReceived={this.handleReceivedConversation} />
                
@@ -54,7 +54,7 @@ class App extends Component {
 
             </Grid.Column>
 
-            <Grid.Column style={{ marginTop: 20 }} width={12}>
+            <Grid.Column style={{ marginTop: 20 }} width={10}>
             
             {activeConversation ? (
                 <MessagesArea

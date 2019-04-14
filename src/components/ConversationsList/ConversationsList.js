@@ -24,6 +24,10 @@ class ConversationsList extends React.Component {
 
   componentDidMount = () => {
     this.props.onRef(this)
+    this.loadConversations()
+  };
+
+  loadConversations = () => {
     fetch(`${apiRoot}/conversations`).then(res => {
       return res.json()
     }).then(conversations => {
@@ -31,10 +35,11 @@ class ConversationsList extends React.Component {
       conversations = orderByDate(conversations, 'created_at');
       this.setState({ conversations });
     });
-  };
+  }
 
   handleActiveConversation = id => {
     this.props.handleActiveConversation(id)
+    this.loadConversations()
     this.setState({ activeConversation: id });
   };
 
