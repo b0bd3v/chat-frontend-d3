@@ -21,7 +21,7 @@ class ItemMessage extends React.Component {
     if(!message){ return '' }
 
     return (
-        <List.Item key={`${message.conversation_id}_${message.id}`}>
+        <List.Item>
             <Label as='a' image>
                 <img src={randomAvatar(guid())} alt={message.text} />
                 {message.text}

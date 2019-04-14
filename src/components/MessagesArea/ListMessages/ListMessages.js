@@ -32,7 +32,7 @@ class ListMessages extends React.Component {
   orderedMessages = messages => {
     messages = orderByDate(messages, 'created_at', 'asc');
     return messages.map(message => {
-      return <ItemMessage message={message} />      
+      return <ItemMessage  key={`${message.conversation_id}_${message.id}`} message={message} />      
     });
   }
 
@@ -43,7 +43,7 @@ class ListMessages extends React.Component {
 
     return (
       <List>
-        <div style={{height: 600}}></div>
+        <List.Item key="dummy" style={{height: 600}}></List.Item>
         {this.orderedMessages(messages)}
       </List>
     );
