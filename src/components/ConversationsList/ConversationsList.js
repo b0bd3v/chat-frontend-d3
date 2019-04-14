@@ -1,19 +1,10 @@
 import React from 'react';
 import { randomAvatar } from '../../helper/Faker';
 import { orderByDate, findItemByAttribute } from '../../helper/DataManipulation';
-import { API_ROOT, DEV_API_ROOT } from '../../constants';
+import { API_ROOT } from '../../constants';
 import NewConversationForm from './NewConversationForm';
 import PopUpConversation from './PopUpConversation/PopUpConversation';
 import { Card, Icon, Container, Image, List} from 'semantic-ui-react';
-
-let apiRoot;
-
-if (process.env.NODE_ENV === 'development') {
-  apiRoot = DEV_API_ROOT;
-} else {
-  apiRoot = API_ROOT;
-}
-
 
 class ConversationsList extends React.Component {
 
@@ -24,7 +15,7 @@ class ConversationsList extends React.Component {
 
   componentDidMount = () => {
     this.props.onRef(this)
-    fetch(`${apiRoot}/conversations`).then(res => {
+    fetch(`${API_ROOT}/conversations`).then(res => {
       return res.json()
     }).then(conversations => {
       this.props.handleConversations(conversations);

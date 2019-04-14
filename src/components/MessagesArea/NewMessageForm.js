@@ -1,14 +1,6 @@
 import React from 'react';
-import { API_ROOT, DEV_API_ROOT, HEADERS } from '../../constants/index';
+import { API_ROOT, HEADERS } from '../../constants/index';
 import { Form, Input } from 'semantic-ui-react';
-
-let apiRoot;
-
-if (process.env.NODE_ENV === 'development') {
-    apiRoot = DEV_API_ROOT;
-} else {
-    apiRoot = API_ROOT;
-}
 
 class NewMessageForm extends React.Component {
   state = {
@@ -31,7 +23,7 @@ class NewMessageForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     if(this.state.text.length > 0){
-      fetch(`${apiRoot}/messages`, {
+      fetch(`${API_ROOT}/messages`, {
         method: 'POST',
         headers: HEADERS,
         body: JSON.stringify(this.state)
