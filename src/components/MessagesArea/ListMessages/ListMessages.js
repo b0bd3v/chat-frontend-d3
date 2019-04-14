@@ -1,6 +1,7 @@
 import React from 'react';
 import { List } from 'semantic-ui-react';
 import { orderByDate, findItemByAttribute } from '../../../helper/DataManipulation';
+import ItemMessage from './ItemMessage';
 
 
 class ListMessages extends React.Component {
@@ -31,12 +32,13 @@ class ListMessages extends React.Component {
   orderedMessages = messages => {
     messages = orderByDate(messages, 'created_at', 'asc');
     return messages.map(message => {
-      return <List.Item key={`${message.conversation_id}_${message.id}`}>{message.text}</List.Item>
+      return <ItemMessage message={message} />      
     });
   }
 
   render = () => {
-    let {messages} = this.state
+    let {messages} = this.state;
+    
     if(!messages){ return '' }
 
     return (

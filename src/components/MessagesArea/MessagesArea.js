@@ -44,9 +44,11 @@ class MessagesArea extends React.Component {
 
   render = () => {
     let {conversation} = this.state
-
+    
     if(!conversation){ return '' }
 
+    if(!conversation.messages){ conversation.messages = [] }
+    
     return (
       <Card fluid style={{ height: '100%' }} >
         <Cable conversation={conversation} handleReceivedMessage={this.handleReceivedMessage} />

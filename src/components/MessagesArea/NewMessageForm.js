@@ -1,6 +1,6 @@
 import React from 'react';
 import { API_ROOT, DEV_API_ROOT, HEADERS } from '../../constants/index';
-import { Form } from 'semantic-ui-react';
+import { Form, Input } from 'semantic-ui-react';
 
 let apiRoot;
 
@@ -16,6 +16,10 @@ class NewMessageForm extends React.Component {
     conversation_id: this.props.conversation_id
   };
 
+  constructor(props){
+    super(props);
+  }
+
   componentWillReceiveProps = nextProps => {
     this.setState({ conversation_id: nextProps.conversation_id });
   };
@@ -26,20 +30,24 @@ class NewMessageForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    fetch(`${apiRoot}/messages`, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(this.state)
-    });
-    this.setState({ text: '' });
+    if(this.state.text.length > 0){
+      fetch(`${apiRoot}/messages`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify(this.state)
+      });
+      this.setState({ text: '' });
+    }
   };
 
   render = () => {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Field>
-          <input placeholder='Mensagem' value={this.state.text} onChange={this.handleChange}/>
+          <Input 
+            action={{ color: 'teal', labelPosition: 'right', icon: 'paper plane', content: 'Enviar' }}
+            placeholder='Mensagem' value={this.state.text} onChange={this.handleChange}
+          />
         </Form.Field>
       </Form>      
     );
