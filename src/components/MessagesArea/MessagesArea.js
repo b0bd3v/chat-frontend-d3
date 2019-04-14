@@ -48,12 +48,12 @@ class MessagesArea extends React.Component {
     if(!conversation){ return '' }
 
     if(!conversation.messages){ conversation.messages = [] }
-    
+
     return (
       <Card fluid style={{ height: '100%' }} >
         <Cable conversation={conversation} handleReceivedMessage={this.handleReceivedMessage} />
         <Card.Content header={<h2>{conversation.title}</h2>}/>        
-        <div className="content" style={{overflow:'auto'}} ref={this.messagesContent}>
+        <div className="content" style={{overflow:'auto', maxHeight: 600}} ref={this.messagesContent}>
           <ListMessages
             onRef={ref => (this.listMessages = ref)} 
             messages={conversation.messages} />
