@@ -15,7 +15,7 @@ class NewMessageForm extends React.Component {
   state = {
     text: '',
     conversation_id: this.props.conversation_id,
-    user_id: guid()
+    user_id: null
   }
 
   componentWillReceiveProps = nextProps => {
@@ -34,10 +34,10 @@ class NewMessageForm extends React.Component {
         headers: HEADERS,
         body: JSON.stringify(this.state)
       });
-      this.setState({ text: '' });
+      this.setState({ text: '', user_id: guid() });
     }
   }
-  
+    
   render = () => {
     return (
       <Form onSubmit={this.handleSubmit}>

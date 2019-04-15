@@ -24,16 +24,15 @@ let randomAvatar = (id) => {
 let guid = function() {
 
     var nav = window.navigator;
-    
     var screen = window.screen;
     var guid = nav.mimeTypes.length;
+    
     guid += nav.plugins.length;
-    guid += screen.height || '';
-    guid += screen.width || '';
     guid += screen.pixelDepth || '';
-    guid += nav.productSub;
-    guid += nav.userAgent.replace(/\D+/g, '');
-
+    guid += nav.platform || '';
+    guid += nav.deviceMemory || '';
+    guid += nav.hardwareConcurrency || '';    
+    guid += nav.userAgent.replace(/\D+/g, '');    
     return guid;
 }
 

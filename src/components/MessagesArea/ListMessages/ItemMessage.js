@@ -1,6 +1,6 @@
 import React from 'react';
 import { List, Label } from 'semantic-ui-react';
-import { randomAvatar, guid } from '../../../helper/Faker';
+import { randomAvatar } from '../../../helper/Faker';
 
 
 class ItemMessage extends React.Component {
