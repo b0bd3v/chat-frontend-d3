@@ -103,7 +103,7 @@ class ConversationsList extends React.Component {
           
             <PopUpConversation key={conversation.id}
               trigger={
-                <Image style={{cursor: 'pointer'}} avatar src={randomAvatar(conversation.id)} onClick={() => handleActiveConversation(conversation.id)}/>
+                <Image style={{cursor: 'pointer'}} avatar src={randomAvatar(conversation.user_id)} onClick={() => handleActiveConversation(conversation.id)}/>
               }
               conversation={conversation}
             />

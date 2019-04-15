@@ -23,7 +23,7 @@ class ItemMessage extends React.Component {
     return (
         <List.Item>
             <Label as='a' image>
-                <img src={randomAvatar(guid())} alt={message.text} />
+                <img src={randomAvatar(message.user_id)} alt={message.text} />
                 {message.text}
             </Label>
         </List.Item>
